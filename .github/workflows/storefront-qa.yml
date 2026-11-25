@@ -1,0 +1,96 @@
+name: Storefront browser QA
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: python -m playwright install --with-deps chromium
+      - name: Test responsive storefront
+        run: |
+          python - <<'PY'
+          import http.server, threading, pathlib, json
+          from playwright.sync_api import sync_playwright
+          server = http.server.ThreadingHTTPServer(('127.0.0.1', 8765), http.server.SimpleHTTPRequestHandler)
+          threading.Thread(target=server.serve_forever, daemon=True).start()
+          base = 'http://127.0.0.1:8765/'
+          pathlib.Path('qa-screenshots').mkdir(exist_ok=True)
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              for w,h in [(1440,1000),(768,1024),(390,844),(320,700)]:
+                  page = browser.new_page(viewport={'width':w,'height':h})
+                  errors=[]; bad=[]
+                  page.on('pageerror',lambda e: errors.append(str(e)))
+                  page.on('response',lambda r: bad.append(r.url) if r.status>=400 else None)
+                  page.goto(base)
+                  assert page.locator('.product').count()==14
+                  page.evaluate('document.querySelectorAll("img").forEach(i=>i.loading="eager")')
+                  page.wait_for_function('Array.from(document.images).every(i=>i.complete&&i.naturalWidth>0)')
+                  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+                  assert page.locator('.hero-image img').evaluate('(i)=>i.currentSrc.includes("hero-mobile")')==(w<=700)
+                  assert page.evaluate('(()=>{const a=document.querySelector(".hero-copy").getBoundingClientRect(),b=document.querySelector(".hero-image").getBoundingClientRect();return !(Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1)})()')
+                  page.screenshot(path=f'qa-screenshots/store-{w}.png',full_page=True)
+                  page.locator('[data-category="Tart"]').click()
+                  assert page.locator('.product').count()==3
+                  page.locator('[data-add="rose-tart"]').click()
+                  page.locator('[data-add="sakura-tart"]').click()
+                  page.locator('#bag').click()
+                  assert page.locator('#subtotal').inner_text()=='RM 70.00'
+                  page.locator('[data-plus="rose-tart"]').click()
+                  assert page.locator('#subtotal').inner_text()=='RM 105.00'
+                  page.locator('[data-minus="rose-tart"]').click()
+                  assert page.locator('#subtotal').inner_text()=='RM 70.00'
+                  page.locator('#checkout').click()
+                  page.locator('#checkout-form [name=name]').fill('QA')
+                  page.locator('#checkout-form [name=phone]').fill('0123456789')
+                  page.locator('#checkout-form [name=address]').fill('Test')
+                  page.locator('#checkout-form [name=delivery]').select_option('post')
+                  page.locator('#checkout-form button[type=submit]').click()
+                  assert 'memerlukan' in page.locator('#checkout-status').inner_text()
+                  page.locator('#checkout-form [name=delivery]').select_option('local')
+                  page.locator('#checkout-form button[type=submit]').click()
+                  assert 'RM 70.00' in page.locator('#checkout-status').inner_text()
+                  page.keyboard.press('Escape')
+                  assert not page.locator('#cart').is_visible()
+                  page.reload()
+                  assert page.locator('#count').inner_text()=='2'
+                  page.locator('[data-category="Tempe"]').click()
+                  assert page.locator('.product').count()==5
+                  page.locator('#catering-form [name=name]').fill('QA')
+                  page.locator('#catering-form [name=date]').fill('2099-12-01')
+                  page.locator('#catering-form [name=guests]').fill('50')
+                  page.locator('#catering-form [name=location]').fill('Klang')
+                  page.locator('#catering-form button').click()
+                  assert 'disemak' in page.locator('#cater-status').inner_text()
+                  page.goto(base+'dashboard.html')
+                  page.locator('#gross').fill('100')
+                  assert page.locator('#merchant').inner_text()=='RM 85.00'
+                  assert page.locator('#commission').inner_text()=='RM 15.00'
+                  page.locator('#gross').fill('99.99')
+                  assert page.locator('#merchant').inner_text()=='RM 84.99'
+                  assert page.locator('#commission').inner_text()=='RM 15.00'
+                  page.locator('#status').select_option('Selesai')
+                  assert page.locator('#orders tr').count()==1
+                  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+                  assert not errors,errors
+                  assert not bad,bad
+                  page.screenshot(path=f'qa-screenshots/dashboard-{w}.png',full_page=True)
+                  print(f'PASS {w}x{h}: images, layout, cart, checkout, catering, dashboard')
+                  page.close()
+              browser.close()
+          server.shutdown()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: responsive-qa-screenshots
+          path: qa-screenshots/

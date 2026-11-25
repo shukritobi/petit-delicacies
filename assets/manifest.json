@@ -1,0 +1,121 @@
+[
+  {
+    "path": "assets/hero/hero-desktop.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 81390,
+    "original_bytes": 1916646
+  },
+  {
+    "path": "assets/hero/hero-mobile.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 60804,
+    "original_bytes": 1858932
+  },
+  {
+    "path": "assets/products/rose-tart.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 63632,
+    "original_bytes": 1953529
+  },
+  {
+    "path": "assets/products/sakura-tart.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 47570,
+    "original_bytes": 1886139
+  },
+  {
+    "path": "assets/products/salted-egg-tart.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 55182,
+    "original_bytes": 1918492
+  },
+  {
+    "path": "assets/products/jewel.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 54970,
+    "original_bytes": 2007221
+  },
+  {
+    "path": "assets/products/london.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 74994,
+    "original_bytes": 2068565
+  },
+  {
+    "path": "assets/products/mail.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 70440,
+    "original_bytes": 2049785
+  },
+  {
+    "path": "assets/products/cute.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 44264,
+    "original_bytes": 1890356
+  },
+  {
+    "path": "assets/products/durian.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 50040,
+    "original_bytes": 1885649
+  },
+  {
+    "path": "assets/products/frozen.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 78438,
+    "original_bytes": 2009200
+  },
+  {
+    "path": "assets/products/tempe-miso.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 62296,
+    "original_bytes": 1993131
+  },
+  {
+    "path": "assets/products/tempe-curry.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 58298,
+    "original_bytes": 1964683
+  },
+  {
+    "path": "assets/products/tempe-black-white.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 76692,
+    "original_bytes": 2085536
+  },
+  {
+    "path": "assets/products/tempe-ruby.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 73828,
+    "original_bytes": 2072117
+  },
+  {
+    "path": "assets/products/tempe-7-wonder.webp",
+    "width": 960,
+    "height": 1200,
+    "bytes": 72762,
+    "original_bytes": 2062623
+  },
+  {
+    "path": "assets/products/catering.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 113002,
+    "original_bytes": 2079655
+  }
+]

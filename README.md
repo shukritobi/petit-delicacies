@@ -1,9 +1,5 @@
-# Petit Delicacies
+# Petit Delicacies V3
 
-Static ecommerce proposal. Deploy in Settings > Pages > Deploy from a branch > main > / (root).
+Static GitHub Pages proposal, no live transactions. Open index.html via local HTTP or deploy main / root. All 17 photographs are generated concept imagery and stored as local WebP files; merchant must verify product appearance, ingredients, menu, price, shipping, stock and rights before live sales. Prices are illustrative. No customer data is transmitted by forms. Dashboard is a public demonstration with sample data only.
 
-Preview only: product prices and shipping eligibility are illustrative; no live orders, payment or data submission. Owner dashboard demo at dashboard.html.
-
-Production: merchant verifies catalog, photo rights, legal business details, stock, shipping, allergens and pricing. Use Cloudflare Worker + D1, authenticated dashboard, server-authoritative checkout, CHIP Collect hosted payments and independently verified idempotent webhooks. SS Digital Labs commission proposed at 15% of discounted eligible merchandise subtotal, excluding shipping and refunds. CHIP Send aggregate payouts require merchant consent and provider approval; otherwise weekly invoice. No confirmed native split between separate CHIP accounts. No credentials in GitHub Pages. Test all payment, refund, reconciliation and security flows before enabling production.
-
-Media source manifest: assets/media-sources.json. Store approved original JPEGs in assets/ with the matching source keys. Remote media URLs may expire and are temporary fallbacks. Obtain permission before production use.
+Production: merchant-owned CHIP Collect account, Cloudflare Worker + D1, private authenticated dashboard, server-authoritative pricing, verified idempotent payment webhooks, refunds and reconciliation. Proposed commission: SS Digital Labs 15% of eligible discounted product subtotal, excluding shipping and refunds; merchant receives 85% before processing fees. Approved CHIP Send aggregated payouts or agreed periodic settlement; no verified native cross-account split. Never expose payment secrets in GitHub Pages.

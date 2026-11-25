@@ -39,6 +39,20 @@ jobs:
                   assert page.locator('.hero-image img').evaluate('(i)=>i.currentSrc.includes("hero-mobile")')==(w<=700)
                   assert page.evaluate('(()=>{const a=document.querySelector(".hero-copy").getBoundingClientRect(),b=document.querySelector(".hero-image").getBoundingClientRect();return !(Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1)})()')
                   page.screenshot(path=f'qa-screenshots/store-{w}.png',full_page=True)
+                  assert page.locator('link[rel=icon]').get_attribute('href')=='assets/favicon.svg'
+                  assert page.request.get(base+'assets/favicon.svg').ok
+                  page.locator('#search').fill('Jewel')
+                  assert page.locator('.product').count()==1
+                  page.locator('[data-detail="jewel"]').click()
+                  assert page.locator('#product-detail').is_visible()
+                  assert page.locator('#detail-title').inner_text()=='Jewel Cake'
+                  assert page.locator('#detail-img').evaluate('(i)=>i.naturalWidth>0 || !i.complete')
+                  page.keyboard.press('Escape')
+                  assert not page.locator('#product-detail').is_visible()
+                  page.locator('#search').fill('nonexistent product')
+                  assert page.locator('.no-results').is_visible()
+                  page.locator('#search').fill('')
+                  assert page.locator('.product').count()==14
                   page.locator('[data-category="Tart"]').click()
                   assert page.locator('.product').count()==3
                   page.locator('[data-add="rose-tart"]').click()
